@@ -11,6 +11,13 @@ def create_user(user: UserSchema, db: Session):
     db.refresh(user)
     return user
 
-def get_user(username: str, db: Session):
-    return db.query(User).filter(User.username == username).first()
+def is_user_exist(username:str, db: Session):
+    return db.query(User).filter(User.username == username).first() is not None
 
+def get_user(user: UserSchema, db: Session):
+    query = text("SELECT * FROM usuarios WHERE username='%s' AND password='%s'" %(user.username, user.password))
+    user_list = []
+    for user in engine.execute(query):
+        user_list.append(user)
+    return user_list
+    
