@@ -17,10 +17,10 @@ def register(user: UserSchema, db: Session = Depends(get_db)):
 
 @access.post("/login/", status_code=200)
 def login(user: UserSchema, db: Session = Depends(get_db)):
-    user_db = get_user(user, db)
+    response = verify_username_and_password(user, db)
 
-    if user_db is None:
+    if response is None:
         raise HTTPException(status_code=401, detail="Incorrect email or password.")
     
-    return user_db
+    return response
 
