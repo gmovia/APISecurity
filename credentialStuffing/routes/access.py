@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from config.db import get_db, engine
-from schemas.user import RegisterUserSchema, LoginUserSchema
-from config.accessCrud import *
+from schemas.user import *
+from config.access import *
 from models import user
 from models import token
 
@@ -22,15 +22,16 @@ def register(user: RegisterUserSchema, db: Session = Depends(get_db)):
 
 @access.post("/login/", status_code=200)
 def login(user: LoginUserSchema, db: Session = Depends(get_db)):
-    response = verify_login(user, db)
+    
+    if is_user_exist is False:
+        raise HTTPException(status_code=401, detail="Incorrect email, password or token.")
 
+    response = verify_login(user, db)
+    
     if response is None:
-        #Disminuir intentos
-            #Si la cantidad de intentos es igual a 0 se elimina la entrada
         raise HTTPException(status_code=401, detail="Incorrect email, password or token.")
     
     return response.User
-
 
 from sqlalchemy import text
 @access.delete('/deleteDataBase/')
