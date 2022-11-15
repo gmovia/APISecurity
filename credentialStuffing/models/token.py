@@ -7,6 +7,5 @@ class Token(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("usuariosCredentialStuffing.id"))
     token = Column(Integer)
-    attemps = Column(Integer)
     user = relationship("User", back_populates="token")
     

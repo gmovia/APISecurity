@@ -18,14 +18,13 @@ def register(user: RegisterUserSchema, db: Session = Depends(get_db)):
     if response is True:
         raise HTTPException(status_code=403, detail="Already registered user.")
 
+    if the_password_is_valid(user.password) is False:
+        raise HTTPException(status_code=403, detail="Permission denied.")
+
     return create_user(user, db)
 
 @access.post("/login/", status_code=200)
 def login(user: LoginUserSchema, db: Session = Depends(get_db)):
-    
-    if is_user_exist is False:
-        raise HTTPException(status_code=401, detail="Incorrect email, password or token.")
-
     response = verify_login(user, db)
     
     if response is None:
