@@ -27,10 +27,19 @@ def register(user: RegisterUserSchema, db: Session = Depends(get_db)):
 def login(user: LoginUserSchema, db: Session = Depends(get_db)):
     response = verify_login(user, db)
     
-    if response is None:
+    if response is None or is_token_correct(user.username, user.token, db) is False:
         raise HTTPException(status_code=401, detail="Incorrect email, password or token.")
     
     return response.User
+
+@access.post("/get-token/")
+def get_token(username: str, db: Session = Depends(get_db)):
+    response = is_user_exist(username, db)
+
+    if response is False:
+        raise HTTPException(status_code=403, detail="User not exist.")
+
+    return create_token(username, db)
 
 from sqlalchemy import text
 @access.delete('/deleteDataBase/')

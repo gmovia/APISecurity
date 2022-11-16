@@ -7,4 +7,5 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
     password = Column(String)
+    phone = Column(String)
     token = relationship("Token", back_populates="user")
