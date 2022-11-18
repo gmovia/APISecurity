@@ -12,4 +12,4 @@ class UserLoginSchema(BaseModel):
 class UserNewPasswordSchema(BaseModel):
     username: str
     new_password: str
-    pin: int
+    pin: str

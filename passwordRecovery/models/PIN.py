@@ -6,7 +6,7 @@ class PIN(Base):
     __tablename__ = "pinPW"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, ForeignKey("usuariosPW.username"))
-    pin = Column(Integer)
+    pin = Column(String)
     start_date = Column(DateTime)
     user = relationship("User", back_populates="pin")
     

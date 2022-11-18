@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 import random
 import pyautogui, webbrowser
 from time import sleep
+import uuid
 import datetime
 
 def create_user(user: UserRegisterSchema, db: Session):
@@ -27,7 +28,7 @@ def verify_username_and_password(user: UserLoginSchema, db: Session):
     return db.query(User).filter(User.username == user.username).filter(User.password == user.password).first()
 
 def generate_pin(username: str, db: Session):
-    pin = random.randint(100000000000, 999999999999)
+    pin = str(uuid.uuid4()).replace('-', '')
     pin_db = PIN(pin=pin, username=username, start_date=datetime.datetime.now())
     db.add(pin_db)
     db.commit()
@@ -35,7 +36,7 @@ def generate_pin(username: str, db: Session):
     send_pin(pin, get_phone_by_username(username, db).phone)
     return "OK"
 
-def is_pin_correct(username: str, pin: int, db: Session):
+def is_pin_correct(username: str, pin: str, db: Session):
     refresh_pin(username, db)
     return db.query(PIN).filter(PIN.username == username).filter(PIN.pin == pin).first() is not None
 
@@ -51,8 +52,9 @@ def change_password(username: str, new_password: str, db: Session):
     db.add(user_db)
     db.commit()
 
-def send_pin(pin: int, phone: str): #+54911+telefono
+def send_pin(pin: str, phone: str): #+54911+telefono
     webbrowser.open('https://web.whatsapp.com/send?phone='+phone)
     sleep(5)
+    print(str(pin))
     pyautogui.typewrite(str(pin))
     pyautogui.press('enter')
