@@ -55,6 +55,5 @@ def change_password(username: str, new_password: str, db: Session):
 def send_pin(pin: str, phone: str): #+54911+telefono
     webbrowser.open('https://web.whatsapp.com/send?phone='+phone)
     sleep(5)
-    print(str(pin))
     pyautogui.typewrite(str(pin))
     pyautogui.press('enter')
